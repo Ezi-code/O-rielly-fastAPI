@@ -10,7 +10,7 @@ import uuid
 
 class Post(BASE):
     __tablename__ = "post"
-    id = Column(UUID, primary_key=True, nullable=True, default=lambda: str(uuid.uuid4()))
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=True, default=uuid.uuid4)
     title = Column(String)
     content = Column(String)
     created_at = Column(DateTime, default=datetime.now)

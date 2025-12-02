@@ -3,6 +3,7 @@
 import uuid
 
 from sqlalchemy import Column, String, DateTime, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 from database import BASE
 
@@ -12,7 +13,7 @@ class User(BASE):
 
     __tablename__ = "user"
     id = Column(
-        String, primary_key=True, nullable=False, default=lambda: str(uuid.uuid4())
+        UUID, primary_key=True, nullable=False, default=lambda: str(uuid.uuid4())
     )
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
@@ -24,9 +25,9 @@ class User(BASE):
 
 class UserSession(BASE):
     __tablename__ = "user_session"
-
+    id = Column(UUID, primary_key=True, nullable=False, default=lambda: str(uuid.uuid4()))
     jti = Column(String(36), primary_key=True, nullable=False)
-    user_id = Column(String, ForeignKey("user.id"), nullable=False)
+    user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     revoked = Column(Boolean, default=False, nullable=False)

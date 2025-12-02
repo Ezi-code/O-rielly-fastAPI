@@ -2,13 +2,15 @@
 
 from datetime import datetime
 
-from sqlalchemy import Integer, Column, String, DateTime
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from database import BASE
+import uuid
 
 
 class Post(BASE):
     __tablename__ = "post"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(UUID, primary_key=True, nullable=True, default=lambda: str(uuid.uuid4()))
     title = Column(String)
     content = Column(String)
     created_at = Column(DateTime, default=datetime.now)

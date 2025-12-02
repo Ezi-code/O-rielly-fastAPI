@@ -35,7 +35,7 @@ async def login(body: LoginRequest, db: Session = Depends(get_db)):
     if not user or not verify_password(body.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
-    access_token, jti, exp = create_access_token(data={"sub": user.id})
+    access_token, jti, exp = create_access_token(data={"sub": str(user.id)})
     save_session(db, jti=jti, user_id=user.id, expires_at=exp)
 
     token = Token(access_token=access_token)
@@ -55,13 +55,6 @@ async def login_for_access_token(request: LoginRequest, db: Session = Depends(ge
     return Token(access_token=access_token)
 
 
-@router.get("/logout")
-async def logout(requests, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == requests.username).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-
 @router.get("/me")
 async def me(payload=Depends(get_current_user_payload)):
     return {"sub": payload["sub"], "jti": payload["jti"]}
@@ -75,4 +68,4 @@ async def logout_refresh(
     if not jti:
         raise HTTPException(status_code=400, detail="JTI required")
     revoke_session(db, jti=jti)
-    return
+    return {None: 204}

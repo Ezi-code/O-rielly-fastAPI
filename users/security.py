@@ -31,9 +31,9 @@ def create_access_token(data: dict):
     expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update(
         {
-            "iat": now,
-            "nbf": now,
-            "exp": expire,
+            "iat": int(now.timestamp()),
+            "nbf": int(now.timestamp()),
+            "exp": int(expire.timestamp()),
             "jti": jti,
         }
     )

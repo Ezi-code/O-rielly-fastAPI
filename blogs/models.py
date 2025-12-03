@@ -11,7 +11,7 @@ import uuid
 class Post(BASE):
     __tablename__ = "post"
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=True, default=uuid.uuid4)
-    title = Column(String)
+    title = Column(String, nullable=False)
     content = Column(String)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)

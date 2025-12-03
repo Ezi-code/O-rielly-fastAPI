@@ -1,16 +1,18 @@
-"""fix models UUIDs
+"""init migrations
 
-Revision ID: dc184ce32624
-Revises:
-Create Date: 2025-12-02 12:38:33.371350
+Revision ID: fc08070eda89
+Revises: 
+Create Date: 2025-12-03 13:42:55.319749
 
 """
-
 from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "dc184ce32624"
+revision: str = 'fc08070eda89'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

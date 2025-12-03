@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 
 from users.models import User
 from users.resources import save_session, revoke_session
@@ -15,7 +15,7 @@ from users.security import (
 router = APIRouter(tags=["users"], prefix="/users")
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def register(user_in: UserCreate, db: Session = Depends(get_db)):
     user = User(
         username=user_in.username,
@@ -28,7 +28,7 @@ async def register(user_in: UserCreate, db: Session = Depends(get_db)):
     return user
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
 async def login(body: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == body.username).first()
     print(user.username)
@@ -43,7 +43,7 @@ async def login(body: LoginRequest, db: Session = Depends(get_db)):
     return LoginResponse(token=token, user=user_out)
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=Token, status_code=status.HTTP_200_OK)
 async def login_for_access_token(request: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == request.username).first()
 
@@ -55,12 +55,12 @@ async def login_for_access_token(request: LoginRequest, db: Session = Depends(ge
     return Token(access_token=access_token)
 
 
-@router.get("/me")
+@router.get("/me", status_code=status.HTTP_200_OK)
 async def me(payload=Depends(get_current_user_payload)):
     return {"sub": payload["sub"], "jti": payload["jti"]}
 
 
-@router.post("/logout")
+@router.post("/logout", status_code=status.HTTP_200_OK)
 async def logout_refresh(
     request=Depends(get_current_user_payload), db: Session = Depends(get_db)
 ):
@@ -68,4 +68,4 @@ async def logout_refresh(
     if not jti:
         raise HTTPException(status_code=400, detail="JTI required")
     revoke_session(db, jti=jti)
-    return {None: 204}
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

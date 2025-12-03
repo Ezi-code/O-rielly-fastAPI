@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, UUID4, Field
 
 
 class BasePost(BaseModel):
-    title: str
+    """Base post model."""
+
+    title: str = Field(min_length=100)
     content: str
 
 
@@ -19,4 +21,4 @@ class Post(BasePost):
 
 
 class PostCreate(BasePost):
-    pass
+    """Post create model."""

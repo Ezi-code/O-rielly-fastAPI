@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 
 
 class BasePost(BaseModel):
@@ -11,7 +11,7 @@ class BasePost(BaseModel):
 class Post(BasePost):
     """Post model."""
 
-    id: int
+    id: UUID4
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 

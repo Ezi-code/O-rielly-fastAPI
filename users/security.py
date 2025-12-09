@@ -41,7 +41,7 @@ def create_access_token(data: dict):
     return encoded_jwt, jti, expire
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
 
 
 def decode_token(token: str) -> dict:
@@ -51,6 +51,7 @@ def decode_token(token: str) -> dict:
 def get_current_user_payload(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ) -> dict:
+    """Get current user payload."""
     try:
         payload = decode_token(token)
     except JWTError:
@@ -64,4 +65,4 @@ def get_current_user_payload(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token is revoked or inactive",
         )
-    return payload  # you can also look up the user h
+    return payload

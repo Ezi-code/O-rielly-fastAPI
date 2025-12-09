@@ -31,7 +31,6 @@ async def register(user_in: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
 async def login(body: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == body.username).first()
-    print(user.username)
     if not user or not verify_password(body.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 

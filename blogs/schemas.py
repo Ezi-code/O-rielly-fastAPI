@@ -6,7 +6,7 @@ from pydantic import BaseModel, UUID4, Field
 class BasePost(BaseModel):
     """Base post model."""
 
-    title: str = Field(min_length=100)
+    title: str = Field(max_length=100)
     content: str
 
 
